@@ -1,0 +1,9 @@
+
+2025-10-29 10:15:23 INFO Application started successfully
+2025-10-29 10:15:45 INFO User login: user123
+2025-10-29 10:16:12 ERROR Database connection failed: timeout after 30s
+2025-10-29 10:16:15 WARNING Retrying database connection
+2025-10-29 10:16:20 INFO Database connection established
+2025-10-29 10:17:33 ERROR Failed to process payment: Invalid card number
+2025-10-29 10:18:01 CRITICAL System memory usage exceeded 95%
+2025-10-29 10:18:45 INFO User logout: user123
