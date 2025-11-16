@@ -175,6 +175,35 @@ def restore_backup(backup_path, restore_dir='restored'):
         print(f" ✗ Error restoring backup: {str(e)} ")
         return False
 
+def scheduled_backup(source_paths, backup_dir='backups'):
+    """
+    Performs scheduled backups for multiple sources (for cron jobs).
+    Logs results instead of printing to console.
+    """
+    import logging
+    
+    logging.basicConfig(
+        filename='logs/backup.log',
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s'
+        
+    )
+    logging.info("Starting scheduled backup")
+    
+    for source in source_paths:
+        try:
+            result = create_backup(source, backup_dir)
+            if result:
+                logging.info(f"Successfully backed up: {source}")
+            else:
+                logging.error(f"Failed to backup: {source}")
+        
+        except Exception as e:
+            logging.error(f"Error backing up {source}: {str(e)}")
+    
+    logging.info("Scheduled backup completed!")
+            
+
 
 if __name__ == "__main__":
     print("=== AUTOMATED BACKUP MANAGER ===\n")
