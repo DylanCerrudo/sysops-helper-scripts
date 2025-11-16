@@ -1,108 +1,79 @@
 # SysOps Helper Scripts
 
-A Python-based automation suite for system operations, focusing on log analysis, automated backups, and system monitoring.
+Python automation tools I built to help with system administration tasks - log analysis, backups, and monitoring.
 
-## 🚀 Features
+## What This Does
 
-### 1. Log File Analysis & Error Detection
-- Automated log parsing using regex patterns
-- Real-time error detection and classification
-- Reduces troubleshooting time by 40%
-- Supports INFO, WARNING, ERROR, and CRITICAL log levels
+I created three main scripts that automate common sysops tasks:
 
-## 📋 Prerequisites
+**Log Analyzer** - Scans through log files and pulls out errors, warnings, and critical issues. Uses regex to parse different log formats and categorize problems by severity. Saves a ton of time when troubleshooting.
 
-- Python 3.x
-- Basic understanding of system logs
+**Backup Manager** - Automatically creates timestamped ZIP backups of files and directories. Filters out junk like .git folders and build artifacts. Keeps track of backup history so you can see what got backed up when.
 
-## 🛠️ Installation
+**System Monitor** - Watches CPU, memory, and disk usage in real-time. Set your own thresholds and get alerts when resources are running low. Can run continuously or just do spot checks.
 
-1. Clone the repository:
+## Setup
+
+You'll need Python 3 and the psutil library:
 ```bash
-git clone https://github.com/YOUR_USERNAME/sysops-helper.git
-cd sysops-helper
+pip3 install psutil --break-system-packages
 ```
 
-2. Run the log analyzer:
+Then clone the repo:
 ```bash
-python3 log_analyzer.py
+git clone https://github.com/DylanCerrudo/sysops-helper-scripts.git
+cd sysops-helper-scripts
 ```
 
-## 📊 Usage
+## How to Use
 
-### Log Analysis
-Place your log file in the project directory and run:
+**Check logs:**
 ```bash
 python3 log_analyzer.py
 ```
+Point it at a log file and it'll show you all errors, warnings, and critical issues with timestamps.
 
-The script will analyze the log file and generate a detailed report showing:
-- Total lines processed
-- Number of errors, warnings, and critical issues
-- Detailed breakdown of each issue with timestamps
-
-## 🔧 Project Structure
+**Create a backup:**
+```bash
+python3 backup_manager.py
 ```
-sysops-helper/
-├── log_analyzer.py       # Main log analysis script
-├── sample_app.log        # Sample log file for testing
-└── README.md            # Project documentation
+Makes a compressed backup with the current date/time in the filename. Run it again later and you'll have a history of backups to choose from.
+
+**Monitor your system:**
+```bash
+python3 system_monitor.py
+```
+Shows current CPU, RAM, and disk usage. Edit the thresholds in the code if you want alerts at different levels.
+
+## Project Structure
+```
+log_analyzer.py       - parses logs and detects errors
+backup_manager.py     - creates and manages backups
+system_monitor.py     - tracks system resources
+sample_app.log        - example log file for testing
+backups/              - where backups get saved
 ```
 
-## 🎯 Roadmap
+## Why I Built This
 
-- [x] Basic log file analysis
-- [x] Save reports to files
-- [ ] Real-time log monitoring
-- [ ] Automated backup scripts
-- [ ] System monitoring with alerts
-- [ ] Google Cloud integration
-- [ ] Email/SMS notifications
+I'm working on the Google IT Automation with Python certification and wanted to apply what I'm learning to real problems. As I code daily and work with multiple projects, I kept running into the same tedious tasks - manually checking logs when something breaks, remembering to backup my work, and wondering if my system was about to crash because I had too many things running.
 
-## 👤 Author
+Built these scripts to solve my own workflow issues. Now instead of digging through log files for 20 minutes, the analyzer pulls errors instantly. Backups actually happen on schedule instead of "I'll do it later" (which usually meant never). And I can glance at system stats instead of guessing if I need to close some tabs.
 
-Dylan Cerrudo - [GitHub](https://github.com/DylanCerrudo)
+Basically took the repetitive stuff I was doing manually and automated it. Makes my daily coding routine way smoother.
 
-## 📝 License
+## What's Next
 
-This project is open source and available under the MIT License.
+Planning to add:
+- Cloud storage integration (probably Google Cloud)
+- Email/SMS alerts when thresholds are hit
+- Cron job examples for automated scheduling
+- Maybe a simple web dashboard
 
-## 🤝 Contributing
+## Notes
 
-Contributions, issues, and feature requests are welcome!
+The email alert code is in there but commented out - you need to add your own SMTP credentials if you want to use it. Don't push credentials to GitHub (learned that the hard way).
 
 ---
 
-**Expected Completion:** November 2025
-```
-
----
-
-**File 2: .gitignore** (tells Git which files to ignore)
-
-Create a file called `.gitignore` and paste this:
-```
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-*.egg-info/
-
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Log files (you might want to keep sample_app.log though)
-*.log
-!sample_app.log
-
-# Reports
-*_report.txt
+Still working on this - started October 2025, aiming to wrap up by end of November.
