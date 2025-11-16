@@ -52,7 +52,7 @@ sysops-helper/
 ## 🎯 Roadmap
 
 - [x] Basic log file analysis
-- [ ] Save reports to files
+- [x] Save reports to files
 - [ ] Real-time log monitoring
 - [ ] Automated backup scripts
 - [ ] System monitoring with alerts

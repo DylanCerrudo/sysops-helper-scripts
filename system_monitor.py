@@ -43,10 +43,10 @@ class SystemMonitor:
         memory_total_gb = memory.total / (1024**3)
         memory_used_gb = memory.used / (1024**3)
         disk_total_gb = disk.total / (1024**3)
-        disk_used_gb = disk_used_gb / (1024**3)
+        disk_used_gb = disk.used / (1024**3)
 
         return {
-            "timestamp": datetime.now().strftime("%Y-%m-%d % I:%M:%S %p"),
+            "timestamp": datetime.now().strftime("%Y-%m-%d %I:%M:%S %p"),
             "cpu_percent": cpu_percent,
             "cpu_count": cpu_count,
             "memory_percent": memory_percent,
@@ -98,7 +98,7 @@ class SystemMonitor:
 
         # CPU info
         print(f"CPU Usage:")
-        print(f"    {stats['Cpu_percent']:.1f%} ({stats['cpu_count']} cores)")
+        print(f"    {stats['cpu_percent']:.1f}% ({stats['cpu_count']} cores)")
 
         if stats["cpu_percent"] > self.cpu_threshold:
             print(f" ALERT!: Exceeds threshold ({self.cpu_threshold}%)")
@@ -108,7 +108,7 @@ class SystemMonitor:
         print(f" Memory Usage:")
         print(
             f" {stats['memory_percent']:.1f}% "
-            f"({stats['memory_used_gb']:1f}GB / {stats['memory_total_gb']:1f}GB)"
+            f"({stats['memory_used_gb']:.1f}GB / {stats['memory_total_gb']:.1f}GB)"
         )
         if stats["memory_percent"] > self.memory_threshold:
             print(f"    Alert!: Exceeds threshold ({self.memory_threshold}%)")
@@ -158,7 +158,7 @@ This is an automated alert from your SysOps monitoring system.
                 email_config["smtp_server"], email_config["smtp_port"]
             )
             server.starttls()
-            server.login(email_config["sender_email"], email_config["smtp_port"])
+            server.login(email_config["sender_email"], email_config["sender_password"])
             server.send_message(msg)
             server.quit()
 
@@ -173,18 +173,67 @@ This is an automated alert from your SysOps monitoring system.
         """
         Performs a single monitoring check and displays results.
         """
-        stats = self.get_system_stats
-        alerts = self.check_thresholds
+        stats = self.get_system_stats()
+        alerts = self.check_thresholds(stats)
         self.display_stats(stats, alerts)
-        
+
         if alerts:
-            
-            self.alert_log.append({
-                'timestamp': stats['timestamp'],
-                'alerts': alerts
-            })
-        
+
+            self.alert_log.append({"timestamp": stats["timestamp"], "alerts": alerts})
+
         return stats, alerts
-    
-    
-        
+
+    def monitor_continuous(self, interval=60, duration=None):
+        """
+        Continuously monitors system resources at specified intervals.
+        """
+
+        print(
+            f"\n Starting continuous monitoring (checking every {interval} seconds... "
+        )
+        print("Press Ctrl+C to stop\n")
+
+        start_time = time.time()
+        check_count = 0
+
+        try:
+            while True:
+                check_count += 1
+                print(f"\n--- Check #{check_count} ----")
+
+                stats, alerts = self.monitor_once()
+
+                if duration and (time.time() - start_time) >= duration:
+                    print(f"\n Monitoring completed! ({duration} seconds)")
+                    break
+
+                print(f"\n Next check in {interval} seconds...")
+                time.sleep(interval)
+
+        except KeyboardInterrupt:
+            print(f"\n\n Monitoring stopped by user")
+            print(f"Total checks performed: {check_count}")
+            print(f"Total alerts triggered: {len(self.alert_log)}")
+
+
+if __name__ == "__main__":
+    print("--- SYSTEM MONITORING & ALERTING ---\n")
+
+    monitor = SystemMonitor(cpu_threshold=50, memory_threshold=50, disk_threshold=50)
+
+    print("Performance system check...\n")
+    monitor.monitor_once()
+
+    # Uncomment to enable continuous monitoring (checks every 30 seconds)
+    # monitor.monitor_continuous(interval=30)
+
+    # Example: Email alert configuration (This is to receive the actual alerts uncomment and include credentials but don't push your password to repo or user!)
+    # email_config = {
+    #     'smtp_server': 'smtp.gmail.com',
+    #     'smtp_port': 587,
+    #     'sender_email': 'your-email@gmail.com',
+    #     'sender_password': 'your-app-password',
+    #     'recipient_email': 'recipient@example.com'
+    # }
+    # if alerts:
+    #     monitor.send_email_alert(alerts, stats, email_config)
