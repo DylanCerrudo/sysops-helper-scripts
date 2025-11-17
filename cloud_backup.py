@@ -119,6 +119,39 @@ class CloudBackupManager:
             print(f"Error listing cloud backups: str{e}")
     
     
+    def download_backup(self, cloud_file_path, local_destination):
+        """
+        Downloads a backup from cloud storage.
+        """
+        if not self.bucket:
+            print("Error: Not connected to Google Cloud Storage")
+            return False
+        
+        
+        try:
+            blob = self.bucket.blob(cloud_file_path)
             
+            if not blob.exists():
+                print("Error: File not found in cloud: {cloud_file_path}")
+                return False
+            print(f"Downloading {cloud_file_path} from cloud...")
+        
+        
+            blob.download_to_file_name(local_destination)
+            
+            size_mb = os.path.getsize(local_destination)
+            print(f"Download successful! ({size_mb:.2f} MB)")
+            print(f"Saved to: {local_destination}")
+            
+            return True
+        
+        except Exception as e:
+            print(f"Error downloading file: {str(e)}")
+            return False
+    
+    
+        
+            
+                
             
     
