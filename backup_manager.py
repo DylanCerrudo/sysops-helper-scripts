@@ -33,7 +33,7 @@ def should_skip_file(file_path):
 
 def create_backup(source_path, backup_dir="backups"):
     """
-    Creates a timestamped backup of a fil or directory.
+    Creates a timestamped backup of a file or directory.
 
     Compresses the source into a ZIP archive with timestamp
     for easy version tracking and reduced storage usage.
@@ -110,7 +110,7 @@ def list_backups(backup_dir="backups"):
     backup_files = [f for f in os.listdir(backup_dir) if f.endswith(".zip")]
 
     if not backup_files:
-        print(f"No backups found in '{backup_dir}")
+        print(f"No backups found in '{backup_dir}'")
         return
 
     backup_files.sort(
