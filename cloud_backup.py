@@ -34,4 +34,18 @@ class CloudBackupManager:
             print(f"Error connecting to Google Cloud: {str(e)}")
             self.client = None
             self.bucket = None
+
+    def upload_backup(self, local_file_path, cloud_folder='backups'):
+        """
+        Uploads a backup file to Google Cloud Storage.
+        """
+        
+        if not self.bucket:
+            print("Error: Not connected to Google Cloud Storage")
+            return False
+        
+        if not os.path.exists(local_file_path):
+            print("Error!: File does not exist.")
+            return False
+            
     
